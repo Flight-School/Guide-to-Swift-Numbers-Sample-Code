@@ -1,0 +1,44 @@
+language: swift
+osx_image: xcode9.3
+env:
+  global:
+    - SDK=iphoneos
+    - TARGET=armv7-apple-ios10
+  matrix:
+    - PLAYGROUND_DIR="Chapter 1/Floating Point Approximates.playground"
+    - PLAYGROUND_DIR="Chapter 1/Floating Point Environment.playground"
+    - PLAYGROUND_DIR="Chapter 2/Cardinal Numbers.playground"
+    - PLAYGROUND_DIR="Chapter 2/Currencies.playground"
+    - PLAYGROUND_DIR="Chapter 2/Custom Formats.playground"
+    - PLAYGROUND_DIR="Chapter 2/Decimal Numbers.playground"
+    - PLAYGROUND_DIR="Chapter 2/Integer and Fraction Digits.playground"
+    - PLAYGROUND_DIR="Chapter 2/Ordinal Numbers.playground"
+    - PLAYGROUND_DIR="Chapter 2/Percentages.playground"
+    - PLAYGROUND_DIR="Chapter 2/Rounding Modes.playground"
+    - PLAYGROUND_DIR="Chapter 2/Scientific Notation.playground"
+    - PLAYGROUND_DIR="Chapter 2/Significant Digits.playground"
+    - PLAYGROUND_DIR="Chapter 3/Currency Converter.playground"
+    - PLAYGROUND_DIR="Chapter 3/Money.playground"
+    - PLAYGROUND_DIR="Chapter 4/Configuring Precision.playground"
+    - PLAYGROUND_DIR="Chapter 4/Natural Scale.playground"
+    - PLAYGROUND_DIR="Chapter 4/Provided Units.playground"
+    - PLAYGROUND_DIR="Chapter 4/Temperature Formatting.playground"
+    - PLAYGROUND_DIR="Chapter 4/Units Interoperability.playground"
+    - PLAYGROUND_DIR="Chapter 5/Agricultural Flight Planner.playground"
+
+script:
+  xcrun swift --version &&
+  cd "${PLAYGROUND_DIR}" &&
+  xcrun -sdk "${SDK}"
+    swiftc -target "${TARGET}"
+           -emit-library -emit-module -module-name AuxiliarySources
+           Sources/*.swift &&
+  if ! xcrun swiftc -emit-imported-modules Contents.swift |
+        grep -q "PlaygroundSupport";
+  then
+    cat <(echo "import AuxiliarySources") Contents.swift > main.swift &&
+    xcrun -sdk "${SDK}"
+      swiftc -target "${TARGET}"
+        -I "." -L "." -lAuxiliarySources -module-link-name AuxiliarySources
+        -o Playground main.swift;
+  fi
