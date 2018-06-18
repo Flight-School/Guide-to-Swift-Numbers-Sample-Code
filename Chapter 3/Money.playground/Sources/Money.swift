@@ -28,7 +28,10 @@ extension Money: ExpressibleByIntegerLiteral {
 
 extension Money: ExpressibleByFloatLiteral {
     public init(floatLiteral value: Double) {
-        self.init(Decimal(floatLiteral: value))
+        var approximate = Decimal(floatLiteral: value)
+        var rounded = Decimal()
+        NSDecimalRound(&rounded, &approximate, Currency.minorUnit, .bankers)
+        self.init(rounded)
     }
 }
 
