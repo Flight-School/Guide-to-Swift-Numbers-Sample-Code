@@ -20,9 +20,35 @@ extension Money: Comparable {
     }
 }
 
+extension Money: CustomStringConvertible {
+    public var description: String {
+        return "\(self.amount)"
+    }
+}
+
+extension Money: CustomPlaygroundDisplayConvertible {
+    public var playgroundDescription: Any {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = Currency.code
+        
+        return formatter.string(for: self.amount)!
+    }
+}
+
+extension Money: LosslessStringConvertible {
+    public init?(_ description: String) {
+        guard let amount = Decimal(string: description) else {
+            return nil
+        }
+        
+        self.init(amount)
+    }
+}
+
 extension Money: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: Int) {
-        self.amount = Decimal(integerLiteral: value)
+        self.init(Decimal(integerLiteral: value))
     }
 }
 
@@ -32,6 +58,20 @@ extension Money: ExpressibleByFloatLiteral {
         var rounded = Decimal()
         NSDecimalRound(&rounded, &approximate, Currency.minorUnit, .bankers)
         self.init(rounded)
+    }
+}
+
+extension Money: ExpressibleByStringLiteral {
+    public init(unicodeScalarLiteral value: Unicode.Scalar) {
+        fatalError("Money cannot be initialized from Unicode scalar")
+    }
+    
+    public init(extendedGraphemeClusterLiteral value: Character) {
+        fatalError("Money cannot be initialized from extended grapheme cluster")
+    }
+    
+    public init(stringLiteral value: String) {
+        self.init(value)!
     }
 }
 
@@ -78,12 +118,22 @@ extension Money {
         return Decimal(lhs) * rhs
     }
     
+    public static func *= (lhs: inout Money<C>, rhs: Decimal) {
+        lhs.amount *= rhs
+    }
+    
     public static func *= (lhs: inout Money<C>, rhs: Double) {
         lhs.amount *= Decimal(rhs)
     }
     
     public static func *= (lhs: inout Money<C>, rhs: Int) {
         lhs.amount *= Decimal(rhs)
+    }
+}
+
+extension Money {
+    public static prefix func - (value: Money<C>) -> Money<C> {
+        return Money<C>(-value.amount)
     }
 }
 
@@ -113,21 +163,5 @@ extension Money: Codable {
         var keyedContainer = encoder.container(keyedBy: CodingKeys.self)
         try keyedContainer.encode(self.amount, forKey: .amount)
         try keyedContainer.encode(Currency.code, forKey: .currencyCode)
-    }
-}
-
-extension Money: CustomStringConvertible {
-    public var description: String {
-        return "\(self.amount) \(C.code)"
-    }
-}
-
-extension Money: CustomPlaygroundDisplayConvertible {
-    public var playgroundDescription: Any {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = Currency.code
-        
-        return formatter.string(for: self.amount)!
     }
 }
