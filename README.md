@@ -1,5 +1,7 @@
 # Flight School Guide to Swift Numbers Sample Code
 
+![Build Status](https://api.travis-ci.com/Flight-School/Guide-to-Numbers-Sample-Code.svg?branch=master)
+
 This repository contains sample code used in the
 [Flight School Guide to Swift Numbers](https://gumroad.com/l/swift-numbers).
 
