@@ -6,7 +6,6 @@ class UnitAngularSpeed: UnitFrequency {
         return .init(symbol: "deg/s", converter: baseUnitConverter)
     }
     
-    
     public class var radiansPerSecond: UnitAngularSpeed {
         let converter = UnitConverterLinear(coefficient: 0.0174533)
         return .init(symbol: "rad/s", converter: converter)
