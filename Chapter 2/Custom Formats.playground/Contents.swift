@@ -1,5 +1,8 @@
 import Foundation
 
+let 🇺🇸 = Locale(identifier: "en-US")
+let 🇫🇷 = Locale(identifier: "fr-FR")
+
 let formatter = NumberFormatter()
 formatter.numberStyle = .decimal
 
@@ -7,8 +10,8 @@ formatter.numberStyle = .decimal
 // that rounds to the nearest five tenths
 formatter.format = "#,##0.5"
 
-formatter.locale = Locale(identifier: "en-US")
+formatter.locale = 🇺🇸
 formatter.string(for: 1234.567)
 
-formatter.locale = Locale(identifier: "fr-FR")
+formatter.locale = 🇫🇷
 formatter.string(for: 1234.567)
