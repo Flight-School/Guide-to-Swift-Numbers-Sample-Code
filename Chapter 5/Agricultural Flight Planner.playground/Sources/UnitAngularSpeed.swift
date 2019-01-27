@@ -1,6 +1,6 @@
 import Foundation
 
-class UnitAngularSpeed: UnitFrequency {
+public final class UnitAngularSpeed: UnitFrequency {
     public class var degreesPerSecond: UnitAngularSpeed {
         let baseUnitConverter = UnitConverterLinear(coefficient: 1)
         return .init(symbol: "deg/s", converter: baseUnitConverter)

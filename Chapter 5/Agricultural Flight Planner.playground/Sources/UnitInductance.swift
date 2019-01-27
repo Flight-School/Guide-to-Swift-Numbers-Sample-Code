@@ -1,6 +1,6 @@
 import Foundation
 
-public class UnitInductance: Dimension {
+public final class UnitInductance: Dimension {
     public class var henrys: UnitInductance {
         let baseUnitConverter = UnitConverterLinear(coefficient: 1)
         return .init(symbol: "H", converter: baseUnitConverter)

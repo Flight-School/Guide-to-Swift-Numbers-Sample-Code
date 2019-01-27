@@ -1,6 +1,6 @@
 import Foundation
 
-public class UnitLuminousIntensity: Dimension {
+public final class UnitLuminousIntensity: Dimension {
     public class var candelas: UnitLuminousIntensity {
         let baseUnitConverter = UnitConverterLinear(coefficient: 1)
         return .init(symbol: "cd", converter: baseUnitConverter)
